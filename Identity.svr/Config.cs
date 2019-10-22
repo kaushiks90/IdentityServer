@@ -1,4 +1,5 @@
 ﻿using IdentityModel;
+using IdentityServer4;
 using IdentityServer4.Models;
 using IdentityServer4.Test;
 using System.Collections.Generic;
@@ -8,7 +9,15 @@ namespace Identity.svr
 {
     public class Config
     {
+        public static IEnumerable<IdentityResource> GetIdentityResources()
+        {
+            return new List<IdentityResource>
+            {
+                new IdentityResources.OpenId(),
+                new IdentityResources.Profile()
 
+            };
+        }
         public static List<TestUser> GetUsers()
         {
             return new List<TestUser>
@@ -38,6 +47,7 @@ namespace Identity.svr
         {
             return new List<Client>
             {
+                //Gant Type for Client Credentials
                 new Client
                 {
                     ClientId = "client",
@@ -54,6 +64,7 @@ namespace Identity.svr
                         new Claim("City","Bidadi")
                    }
                 },
+                //Grant Type for ResourceOwnerPassword
                 new Client
                 {
                     ClientId = "ro.client",
@@ -69,6 +80,20 @@ namespace Identity.svr
                         new Claim(ClaimTypes.Actor,"Nithyananda"),
                         new Claim("City","Bidadi")
                    }
+                },
+                //Grant Type for Implicit
+                new Client
+                {
+                    ClientId="mvc",
+                    ClientName="MVC Client",
+                    AllowedGrantTypes=GrantTypes.Implicit,
+                    RedirectUris={"http://localhost:5003/signin-oidc"},
+                    PostLogoutRedirectUris={"http://localhost:5003/signout-callback-oidc"},
+                    AllowedScopes=new List<string>
+                    {
+                        IdentityServerConstants.StandardScopes.OpenId,
+                        IdentityServerConstants.StandardScopes.Profile
+                    }
                 }
             };
         
